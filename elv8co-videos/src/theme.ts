@@ -1,8 +1,6 @@
 import { Easing } from "remotion";
-import { loadFont as loadAnton } from "@remotion/google-fonts/Anton";
-import { loadFont as loadArchivo } from "@remotion/google-fonts/Archivo";
-import { loadFont as loadSerif } from "@remotion/google-fonts/InstrumentSerif";
-import { loadFont as loadMono } from "@remotion/google-fonts/JetBrainsMono";
+import { staticFile } from "remotion";
+import { loadFont } from "@remotion/fonts";
 
 // ─── Palette ────────────────────────────────────────────────────────────────
 export const C = {
@@ -25,17 +23,21 @@ export const GRAD = {
 };
 
 // ─── Typography ─────────────────────────────────────────────────────────────
-const anton = loadAnton("normal", { weights: ["400"], subsets: ["latin"] });
-const archivo = loadArchivo("normal", {
-  weights: ["500", "700", "900"],
-  subsets: ["latin"],
-});
-const serif = loadSerif("normal", { weights: ["400"], subsets: ["latin"] });
-loadSerif("italic", { weights: ["400"], subsets: ["latin"] });
-const mono = loadMono("normal", {
-  weights: ["500", "700"],
-  subsets: ["latin"],
-});
+// Polices embarquées dans public/fonts (pas de dépendance réseau au rendu).
+const local = (family: string, file: string, weight: string, style: "normal" | "italic" = "normal") =>
+  loadFont({ family, url: staticFile(`fonts/${file}.woff2`), weight, style, format: "woff2" });
+local("Anton", "anton-latin-400-normal", "400");
+local("Archivo", "archivo-latin-500-normal", "500");
+local("Archivo", "archivo-latin-700-normal", "700");
+local("Archivo", "archivo-latin-900-normal", "900");
+local("Instrument Serif", "instrument-serif-latin-400-normal", "400");
+local("Instrument Serif", "instrument-serif-latin-400-italic", "400", "italic");
+local("JetBrains Mono", "jetbrains-mono-latin-500-normal", "500");
+local("JetBrains Mono", "jetbrains-mono-latin-700-normal", "700");
+const anton = { fontFamily: "Anton" };
+const archivo = { fontFamily: "Archivo" };
+const serif = { fontFamily: "Instrument Serif" };
+const mono = { fontFamily: "JetBrains Mono" };
 
 export const F = {
   condensed: anton.fontFamily, // tall, poster-like

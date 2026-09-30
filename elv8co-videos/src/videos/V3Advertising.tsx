@@ -79,7 +79,7 @@ const Stake: React.FC = () => {
     <SceneFrame seed="v3stake" variant="deep" dur={110} zoom={[1, 1.06]} grid>
       <Ticker y={1560} opacity={0.2} />
       <At y={280}>
-        <Tag style={{ fontSize: 34 }}>La mise</Tag>
+        <Tag style={{ fontSize: 34 }}>Pour chaque</Tag>
       </At>
       <At y={420}>
         <div style={{ transform: `translateY(${y + bounce}px)` }}>
@@ -89,10 +89,10 @@ const Stake: React.FC = () => {
       <Ring at={land} x={W / 2} y={740} size={900} />
       <Burst at={land} x={W / 2} y={740} count={20} power={420} seed="stake" />
       <At y={820}>
-        <div style={{ fontFamily: F.condensed, fontSize: 400, lineHeight: 1, color: C.ivory, transform: `scale(${num}) translateY(${(1 - num) * 200}px)`, opacity: num > 0.01 ? 1 : 0 }}>20 €</div>
+        <div style={{ fontFamily: F.condensed, fontSize: 400, lineHeight: 1, color: C.ivory, transform: `scale(${num}) translateY(${(1 - num) * 200}px)`, opacity: num > 0.01 ? 1 : 0 }}>1 €</div>
       </At>
       <At y={1250}>
-        <Words lines={["*de publicité*"]} delay={land + 12} mode="blur" stagger={4} style={{ fontSize: 130 }} />
+        <Words lines={["*investi en pub*"]} delay={land + 12} mode="blur" stagger={4} style={{ fontSize: 130 }} />
       </At>
     </SceneFrame>
   );
@@ -100,7 +100,7 @@ const Stake: React.FC = () => {
 
 const Revenue: React.FC = () => {
   const frame = useCurrentFrame();
-  const { value, velocity } = useCount(20, 780, 6, 60, EASE.out);
+  const { value, velocity } = useCount(1, 39, 6, 60, EASE.out);
   const bars = [0.18, 0.26, 0.22, 0.4, 0.52, 0.7, 1];
   return (
     <SceneFrame seed="v3rev" dur={120} zoom={[1.05, 1]}>
@@ -126,11 +126,11 @@ const Revenue: React.FC = () => {
         })()}
       </svg>
       <At y={280}>
-        <Tag style={{ fontSize: 34 }}>Le résultat</Tag>
+        <Tag style={{ fontSize: 34 }}>Il a rapporté</Tag>
       </At>
       <At y={400}>
         <div style={{ display: "flex", alignItems: "flex-start", transform: `scale(${1 + (frame >= 60 ? 0.08 * Math.exp(-(frame - 60) / 5) : 0)})` }}>
-          <Odometer value={value} final={780} velocity={velocity} style={{ fontFamily: F.condensed, fontSize: 380, color: C.ivory }} />
+          <Odometer value={value} final={39} velocity={velocity} style={{ fontFamily: F.condensed, fontSize: 380, color: C.ivory }} />
           <span style={{ fontFamily: F.condensed, fontSize: 380, lineHeight: 1, color: C.copperLight, marginLeft: 20 }}>€</span>
         </div>
       </At>

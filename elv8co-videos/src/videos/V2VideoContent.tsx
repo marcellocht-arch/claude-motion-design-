@@ -546,7 +546,7 @@ const Proof: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const LAND = 86;
-  const { value, velocity } = useCount(0, 24900, 8, LAND, EASE.out);
+  const { value, velocity } = useCount(0, 100000, 8, LAND, EASE.out);
   const punch = frame >= LAND ? 1 + 0.08 * Math.exp(-(frame - LAND) / 5) * Math.cos((frame - LAND) * 0.8) : 1;
   const graph = ramp(frame, [8, LAND], [0, 1], EASE.out);
   const pts = new Array(21).fill(0).map((_, i) => {
@@ -559,8 +559,8 @@ const Proof: React.FC = () => {
   const pops = [
     { icon: ICON.heart, x: 110, y: 560, d: 20 },
     { icon: ICON.eye, x: 860, y: 640, d: 32 },
-    { icon: ICON.message, x: 150, y: 1180, d: 44 },
-    { icon: ICON.heart, x: 820, y: 1120, d: 56 },
+    { icon: ICON.message, x: 70, y: 1330, d: 44 },
+    { icon: ICON.heart, x: 900, y: 1330, d: 56 },
     { icon: ICON.arrowUp, x: 480, y: 480, d: 66 },
   ];
   return (
@@ -591,8 +591,11 @@ const Proof: React.FC = () => {
       <At y={700}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", transform: `scale(${punch})` }}>
           <DrawIcon paths={ICON.eye} progress={ramp(frame, [0, 16], [0, 1])} size={120} color={C.ivory} width={5} />
-          <Odometer value={value} final={24900} velocity={velocity} style={{ fontFamily: F.condensed, fontSize: 290, marginTop: 10, color: C.copperLight, textShadow: `0 0 60px ${C.copper}88` }} />
-          <Words lines={["*vues*"]} delay={LAND - 6} mode="blur" style={{ fontSize: 130, marginTop: -10 }} />
+          <div style={{ display: "flex", alignItems: "flex-start", marginTop: 10, color: C.copperLight, textShadow: `0 0 60px ${C.copper}88` }}>
+            <span style={{ fontFamily: F.condensed, fontSize: 240, lineHeight: 1, marginRight: 12 }}>+</span>
+            <Odometer value={value} final={100000} velocity={velocity} style={{ fontFamily: F.condensed, fontSize: 240 }} />
+          </div>
+          <Words lines={["*vues cumulées*"]} delay={LAND - 6} mode="blur" style={{ fontSize: 120, marginTop: -4 }} />
         </div>
       </At>
       <Flash at={LAND} max={0.4} color={C.copperLight} />

@@ -3,7 +3,7 @@ import { AbsoluteFill, interpolate, random, Sequence, useCurrentFrame, useVideoC
 import { flip } from "@remotion/transitions/flip";
 import { wipe } from "@remotion/transitions/wipe";
 import { C, EASE, F, GRAD, H, W } from "../theme";
-import { beatPulse, CLAMP, pop, ramp, SPRING } from "../anim";
+import { CLAMP, pop, ramp, SPRING } from "../anim";
 import { At, SceneFrame } from "../components/SceneFrame";
 import { ACCENT_SERIF, Marquee, Odometer, Tag, useCount, Words } from "../components/Kinetic";
 import { Burst, Dust, Flash, Ring } from "../components/Particles";
@@ -202,86 +202,6 @@ const Multiplier: React.FC = () => {
   );
 };
 
-const PostCard: React.FC<{ scale?: number; highlight?: boolean }> = ({ scale = 1, highlight }) => {
-  const frame = useCurrentFrame();
-  return (
-    <div
-      style={{
-        width: 220 * scale,
-        height: 300 * scale,
-        borderRadius: 22 * scale,
-        background: highlight ? `linear-gradient(160deg, ${C.night}, ${C.deep})` : "rgba(26,46,69,0.9)",
-        border: `${2 * scale}px solid ${highlight ? C.copperLight : "rgba(243,238,230,0.25)"}`,
-        boxShadow: highlight ? `0 0 60px ${C.copper}88` : "0 20px 40px rgba(0,0,0,0.35)",
-        overflow: "hidden",
-        position: "relative",
-      }}
-    >
-      <div style={{ position: "absolute", inset: `${14 * scale}px ${14 * scale}px ${80 * scale}px`, borderRadius: 12 * scale, background: GRAD.copper, opacity: highlight ? 1 : 0.5 }}>
-        <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%,-50%)" }}>
-          <DrawIcon paths={ICON.play} progress={1} size={60 * scale} color={C.deep} width={8} fill={C.deep} fillOpacity={1} />
-        </div>
-      </div>
-      <div style={{ position: "absolute", left: 16 * scale, bottom: 26 * scale, display: "flex", gap: 10 * scale, alignItems: "center" }}>
-        <div style={{ transform: `scale(${1 + beatPulse(frame) * 0.3})` }}>
-          <DrawIcon paths={ICON.heart} progress={1} size={34 * scale} color={C.copperLight} width={8} fill={C.copperLight} fillOpacity={1} />
-        </div>
-        <div style={{ width: 90 * scale, height: 12 * scale, borderRadius: 6 * scale, background: "rgba(243,238,230,0.3)" }} />
-      </div>
-    </div>
-  );
-};
-
-const Amplify: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const spread = ramp(frame, [60, 100], [0, 1], EASE.out);
-  const vol = ramp(frame, [40, 110], [0.2, 1], EASE.inOut);
-  const cx = W / 2;
-  const cy = 1090;
-  return (
-    <SceneFrame seed="v3amp" dur={170} zoom={[1, 1.05]}>
-      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-        <Ring key={i} at={20 + i * 16} x={cx} y={cy} size={1500} duration={40} width={4} color={i % 2 ? C.ivory : C.copperLight} />
-      ))}
-      {/* copies fanning out */}
-      {[-1, 0, 1].flatMap((gy) =>
-        [-1, 0, 1].map((gx) => {
-          if (gx === 0 && gy === 0) return null;
-          const k = (gx + 1) * 3 + gy + 1;
-          const s = pop(frame, fps, 60 + k * 2, SPRING.snappy);
-          return (
-            <div
-              key={`${gx}${gy}`}
-              style={{ position: "absolute", left: cx - 110 + gx * 290 * spread, top: cy - 150 + gy * 300 * spread, transform: `scale(${0.6 + 0.4 * s}) rotate(${gx * 4 * spread}deg)`, opacity: s }}
-            >
-              <PostCard />
-            </div>
-          );
-        }),
-      )}
-      <div style={{ position: "absolute", left: cx - 110, top: cy - 150, transform: `scale(${pop(frame, fps, 4, SPRING.bouncy) * (1.25 - 0.25 * spread)})` }}>
-        <PostCard highlight />
-      </div>
-      <At y={270}>
-        <Words
-          lines={["On amplifie", "ce qui fonctionne", "*déjà.*"]}
-          delay={2}
-          stagger={3}
-          mode="flip"
-          style={{ fontFamily: F.grotesk, fontWeight: 900, fontSize: 104, color: C.ivory, lineHeight: 1.02, letterSpacing: "-0.03em" }}
-          lineStyles={[undefined, undefined, { fontSize: 140 }]}
-        />
-      </At>
-      {/* volume slider */}
-      <div style={{ position: "absolute", left: 140, right: 140, top: 1560, height: 14, borderRadius: 7, background: "rgba(243,238,230,0.15)" }}>
-        <div style={{ width: `${vol * 100}%`, height: "100%", borderRadius: 7, background: GRAD.copper }} />
-        <div style={{ position: "absolute", left: `${vol * 100}%`, top: -18, width: 50, height: 50, marginLeft: -25, borderRadius: "50%", background: C.ivory, boxShadow: `0 0 30px ${C.copperLight}` }} />
-      </div>
-    </SceneFrame>
-  );
-};
-
 // Benefits — a horizontal carousel of three panels
 const Targeting: React.FC = () => {
   const frame = useCurrentFrame();
@@ -344,102 +264,314 @@ const Budget: React.FC = () => {
   );
 };
 
-const NOTIFS = ["Nouveau message", "Demande de devis", "Nouveau contact", "Prise de rendez-vous"];
+// ─── Nouvel angle : la pub Meta expliquée ───────────────────────────────────
 
-const Inbound: React.FC = () => {
+const BOLD: React.CSSProperties = { fontFamily: F.grotesk, fontWeight: 900, color: C.ivory, lineHeight: 1.04, letterSpacing: "-0.035em" };
+const SUB: React.CSSProperties = { fontFamily: F.grotesk, fontWeight: 500, color: C.ivoryDim, lineHeight: 1.25, letterSpacing: "-0.01em" };
+
+const Hook: React.FC = () => (
+  <SceneFrame seed="v3hook" variant="night" dur={120} zoom={[1.06, 1]} grid>
+    <At y={430}>
+      <Tag style={{ fontSize: 30 }}>Facebook · Instagram</Tag>
+    </At>
+    <At y={540}>
+      <Words lines={["La pub Meta,", "*ça sert à quoi ?*"]} delay={4} stagger={4} mode="rise" style={{ ...BOLD, fontSize: 118 }} accentStyle={{ ...ACCENT_SERIF, fontSize: 140 }} />
+    </At>
+    <At y={1010}>
+      <Words lines={["Et pourquoi payer", "*ne suffit pas.*"]} delay={46} stagger={3} mode="blur" style={{ ...SUB, fontSize: 70, color: C.ivory }} accentStyle={{ ...ACCENT_SERIF, fontSize: 84 }} />
+    </At>
+    <Dust count={14} seed="v3hk" />
+  </SceneFrame>
+);
+
+const WhatFor: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const pin = ramp(frame, [40, 52], [0, 1], EASE.back);
   return (
-    <div style={{ position: "absolute", left: 110, right: 110, top: 330 }}>
-      {NOTIFS.map((n, i) => {
-        const d = 4 + i * 11;
-        const s = pop(frame, fps, d, SPRING.bouncy);
-        const vib = frame - d < 8 && frame > d ? Math.sin(frame * 4) * 6 : 0;
-        return (
-          <div
-            key={n}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 26,
-              padding: "28px 32px",
-              marginBottom: 22,
-              borderRadius: 34,
-              background: "rgba(243,238,230,0.94)",
-              boxShadow: "0 24px 50px rgba(0,0,0,0.4)",
-              transform: `translateY(${(1 - s) * -300}px) translateX(${vib}px) scale(${0.8 + 0.2 * s})`,
-              opacity: s > 0.01 ? 1 : 0,
-            }}
-          >
-            <div style={{ width: 84, height: 84, borderRadius: 22, background: GRAD.copper, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <DrawIcon paths={i % 2 ? ICON.mail : ICON.message} progress={1} size={50} color={C.deep} width={8} />
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontFamily: F.grotesk, fontWeight: 800, fontSize: 40, color: C.deep }}>{n}</div>
-              <div style={{ width: `${60 - i * 8}%`, height: 14, borderRadius: 7, marginTop: 12, background: `${C.deep}22` }} />
-            </div>
-            <div style={{ fontFamily: F.mono, fontSize: 22, color: C.steel, alignSelf: "flex-start" }}>maint.</div>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
-const BENEFITS = [
-  { lines: ["Ciblage."], el: <Targeting /> },
-  { lines: ["Budget", "*maîtrisé.*"], el: <Budget /> },
-  { lines: ["Demandes", "*entrantes.*"], el: <Inbound /> },
-];
-
-const Benefits: React.FC = () => {
-  const frame = useCurrentFrame();
-  const STEP = 78;
-  const pos = interpolate(frame, [STEP - 10, STEP, STEP * 2 - 10, STEP * 2], [0, 1, 1, 2], { ...CLAMP, easing: EASE.snap });
-  const blur = Math.abs(pos - Math.round(pos)) > 0.02 ? Math.sin((pos % 1) * Math.PI) * 16 : 0;
-  return (
-    <SceneFrame seed="v3ben" variant="deep" dur={240} zoom={[1, 1]} grid>
-      <div style={{ position: "absolute", top: 270, left: 90, fontFamily: F.mono, fontWeight: 700, fontSize: 32, color: C.copperLight, letterSpacing: "0.2em" }}>
-        0{Math.round(pos) + 1} / 03
+    <SceneFrame seed="v3what" variant="deep" dur={170} zoom={[1, 1.04]}>
+      <At y={250}>
+        <Tag>01 · À quoi ça sert</Tag>
+      </At>
+      <Sequence from={8} layout="none">
+        <Targeting />
+      </Sequence>
+      <div style={{ position: "absolute", left: 600 - 60, top: 640 - 150, transform: `scale(${pin}) translateY(${(1 - pin) * -80}px)`, transformOrigin: "50% 100%" }}>
+        <DrawIcon paths={ICON.pin} progress={1} size={120} color={C.deep} width={6} fill={C.ivory} fillOpacity={1} />
       </div>
-      <AbsoluteFill style={{ transform: `translateX(${-pos * W}px)`, filter: blur ? `blur(${blur}px)` : undefined }}>
-        {BENEFITS.map((b, i) => (
-          <AbsoluteFill key={i} style={{ left: i * W, width: W }}>
-            <Sequence from={i * STEP - 6} layout="none">
-              {b.el}
-              <At y={b.lines.length > 1 ? 1120 : 1180}>
-                <Words
-                  lines={b.lines}
-                  delay={8}
-                  stagger={4}
-                  mode="rise"
-                  style={{ fontFamily: F.grotesk, fontWeight: 900, fontSize: b.lines.length > 1 ? 130 : 170, color: C.ivory, lineHeight: 1.05, letterSpacing: "-0.04em" }}
-                  accentStyle={{ ...ACCENT_SERIF, fontSize: 160 }}
-                />
-              </At>
-            </Sequence>
-          </AbsoluteFill>
-        ))}
-      </AbsoluteFill>
-      <div style={{ position: "absolute", top: 1580, left: W / 2 - 150, display: "flex", gap: 20 }}>
-        {[0, 1, 2].map((i) => (
-          <div key={i} style={{ width: 80, height: 8, borderRadius: 4, background: Math.round(pos) >= i ? C.copperLight : `${C.ivory}33` }} />
-        ))}
-      </div>
-      <Dust count={16} seed="v3bd" />
+      <At y={1060}>
+        <Words lines={["Montrer votre vidéo", "aux *bonnes personnes.*"]} delay={50} stagger={3} mode="rise" style={{ ...BOLD, fontSize: 92 }} accentStyle={{ ...ACCENT_SERIF, fontSize: 108 }} />
+      </At>
+      <At y={1330}>
+        <Words lines={["Autour de chez vous, selon l'âge,", "les centres d'intérêt…"]} delay={84} stagger={2} mode="blur" style={{ ...SUB, fontSize: 46 }} />
+      </At>
     </SceneFrame>
   );
 };
+
+const AnyBudget: React.FC = () => (
+  <SceneFrame seed="v3bud" variant="night" dur={160} zoom={[1.04, 1]} grid>
+    <At y={250}>
+      <Tag>02 · Le budget</Tag>
+    </At>
+    <Budget />
+    <At y={1110}>
+      <Words lines={["Ça marche avec", "*tous les budgets.*"]} delay={20} stagger={3} mode="rise" style={{ ...BOLD, fontSize: 98 }} accentStyle={{ ...ACCENT_SERIF, fontSize: 116 }} />
+    </At>
+    <At y={1380}>
+      <Words lines={["On commence petit.", "On augmente *si ça rapporte.*"]} delay={62} stagger={2} mode="blur" style={{ ...SUB, fontSize: 50, color: C.ivory }} accentStyle={{ ...ACCENT_SERIF, fontSize: 60 }} />
+    </At>
+  </SceneFrame>
+);
+
+type Row = { t: string; d: string };
+
+const ListScene: React.FC<{ seed: string; variant: "night" | "deep"; tag: string; title: string[]; rows: Row[]; good: boolean; dur: number }> = ({ seed, variant, tag, title, rows, good, dur }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  return (
+    <SceneFrame seed={seed} variant={variant} dur={dur} zoom={[1, 1.03]}>
+      <At y={250}>
+        <Tag>{tag}</Tag>
+      </At>
+      <At y={330}>
+        <Words lines={title} delay={2} stagger={4} mode="rise" style={{ ...BOLD, fontSize: 130 }} accentStyle={{ ...ACCENT_SERIF, fontSize: 150 }} />
+      </At>
+      <div style={{ position: "absolute", left: 90, right: 90, top: 590, display: "flex", flexDirection: "column", gap: 26 }}>
+        {rows.map((r, i) => {
+          const d = 22 + i * 24;
+          const s = pop(frame, fps, d, SPRING.snappy);
+          const ic = ramp(frame, [d + 6, d + 18], [0, 1]);
+          return (
+            <div
+              key={r.t}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 30,
+                padding: "30px 34px",
+                borderRadius: 30,
+                background: good ? "rgba(243,238,230,0.07)" : "rgba(7,15,24,0.55)",
+                border: `2px solid ${good ? "rgba(224,144,85,0.45)" : "rgba(243,238,230,0.14)"}`,
+                transform: `translateX(${(1 - s) * 120}px)`,
+                opacity: Math.min(1, s * 1.5),
+              }}
+            >
+              <div style={{ width: 92, height: 92, flexShrink: 0, borderRadius: "50%", background: good ? GRAD.copper : "rgba(243,238,230,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <DrawIcon paths={good ? ICON.check : ICON.cross} progress={ic} size={54} color={good ? C.deep : C.ivory} width={12} />
+              </div>
+              <div>
+                <div style={{ fontFamily: F.grotesk, fontWeight: 800, fontSize: 52, color: C.ivory, letterSpacing: "-0.02em", lineHeight: 1.1 }}>{r.t}</div>
+                <div style={{ ...SUB, fontSize: 37, marginTop: 6 }}>{r.d}</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </SceneFrame>
+  );
+};
+
+const PROS: Row[] = [
+  { t: "Ciblage précis", d: "Votre ville, votre clientèle, pas les autres" },
+  { t: "Budget maîtrisé", d: "Montant choisi, arrêt à tout moment" },
+  { t: "Tout se mesure", d: "On voit ce qui rapporte, et ce qui ne rapporte pas" },
+  { t: "Effet rapide", d: "Visible dès le lancement de la campagne" },
+];
+const CONS: Row[] = [
+  { t: "Ça s'arrête avec le budget", d: "Plus de pub, plus de diffusion" },
+  { t: "Une mauvaise pub coûte", d: "Contenu qui ne parle pas = argent perdu" },
+  { t: "Il faut tester", d: "Les premiers jours servent à ajuster le tir" },
+];
+
+const DUEL = [
+  { k: "Contenu", a: "Une photo du logo", b: "Le four à 6 h, en vidéo" },
+  { k: "Ciblage", a: "Toute la Belgique", b: "10 km autour de la boutique" },
+  { k: "Message", a: "Venez nous voir", b: "Réservez vos pains du dimanche" },
+  { k: "Suivi", a: "Aucun", b: "Ajusté chaque semaine" },
+];
+
+const Mark: React.FC<{ ok: boolean; p: number }> = ({ ok, p }) => (
+  <div style={{ width: 46, height: 46, flexShrink: 0, borderRadius: "50%", background: ok ? GRAD.copper : "rgba(243,238,230,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <DrawIcon paths={ok ? ICON.check : ICON.cross} progress={p} size={26} color={ok ? C.deep : C.ivory} width={13} />
+  </div>
+);
+
+const Duel: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const colW = (W - 180 - 30) / 2;
+  const head = pop(frame, fps, 30, SPRING.snappy);
+  const cell = (txt: string, ok: boolean, d: number) => {
+    const s = pop(frame, fps, d, SPRING.snappy);
+    return (
+      <div style={{ width: colW, display: "flex", gap: 16, alignItems: "flex-start", opacity: Math.min(1, s * 1.5), transform: `translateY(${(1 - s) * 40}px)` }}>
+        <Mark ok={ok} p={ramp(frame, [d + 4, d + 14], [0, 1])} />
+        <div style={{ fontFamily: F.grotesk, fontWeight: ok ? 800 : 500, fontSize: 41, lineHeight: 1.15, color: ok ? C.ivory : C.ivoryDim, letterSpacing: "-0.015em" }}>{txt}</div>
+      </div>
+    );
+  };
+  return (
+    <SceneFrame seed="v3duel" variant="deep" dur={330} zoom={[1, 1.03]} grid>
+      <At y={250}>
+        <Tag>05 · Exemple</Tag>
+      </At>
+      <At y={320}>
+        <Words lines={["Deux boulangeries.", "*Même budget.*"]} delay={2} stagger={4} mode="rise" style={{ ...BOLD, fontSize: 96 }} accentStyle={{ ...ACCENT_SERIF, fontSize: 116 }} />
+      </At>
+      <div style={{ position: "absolute", left: 90, right: 90, top: 600, display: "flex", gap: 30, opacity: head, transform: `scale(${0.9 + 0.1 * head})` }}>
+        {["Boulangerie A", "Boulangerie B"].map((n, i) => (
+          <div key={n} style={{ width: colW, padding: "22px 0", borderRadius: 24, textAlign: "center", fontFamily: F.grotesk, fontWeight: 900, fontSize: 44, color: i ? C.deep : C.ivory, background: i ? GRAD.copper : "rgba(243,238,230,0.1)" }}>
+            {n}
+          </div>
+        ))}
+      </div>
+      <div style={{ position: "absolute", left: 90, right: 90, top: 740, display: "flex", flexDirection: "column", gap: 30 }}>
+        {DUEL.map((r, i) => {
+          const d = 50 + i * 42;
+          return (
+            <div key={r.k}>
+              <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 24, letterSpacing: "0.3em", color: C.copperLight, textTransform: "uppercase", marginBottom: 14, opacity: ramp(frame, [d - 6, d + 4], [0, 1]) }}>{r.k}</div>
+              <div style={{ display: "flex", gap: 30 }}>
+                {cell(r.a, false, d)}
+                {cell(r.b, true, d + 10)}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 1590, textAlign: "center", fontFamily: F.mono, fontSize: 22, letterSpacing: "0.2em", color: C.steel, textTransform: "uppercase" }}>Exemple illustratif</div>
+    </SceneFrame>
+  );
+};
+
+const Verdict: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const a = pop(frame, fps, 4, SPRING.snappy);
+  const b = pop(frame, fps, 30, SPRING.bouncy);
+  const half = (W - 180 - 30) / 2;
+  return (
+    <SceneFrame seed="v3verd" variant="night" dur={170} zoom={[1.03, 1]}>
+      <div style={{ position: "absolute", left: 90, right: 90, top: 300, display: "flex", gap: 30 }}>
+        <div style={{ width: half, height: 640, borderRadius: 36, background: "rgba(7,15,24,0.55)", border: "2px solid rgba(243,238,230,0.12)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 30, opacity: a, transform: `translateY(${(1 - a) * 60}px)` }}>
+          <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 34, letterSpacing: "0.25em", color: C.steel }}>A</div>
+          <DrawIcon paths={ICON.eye} progress={ramp(frame, [6, 30], [0, 1])} size={170} color={C.ivoryDim} width={4} />
+          <div style={{ textAlign: "center", fontFamily: F.grotesk, fontWeight: 800, fontSize: 48, color: C.ivoryDim, lineHeight: 1.1 }}>
+            Des vues.
+            <br />
+            <span style={{ fontWeight: 500, fontSize: 42 }}>Pas de clients.</span>
+          </div>
+        </div>
+        <div style={{ width: half, height: 640, borderRadius: 36, background: GRAD.copper, boxShadow: `0 0 80px ${C.copper}66`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 30, opacity: b > 0.01 ? 1 : 0, transform: `scale(${0.8 + 0.2 * b})` }}>
+          <div style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 34, letterSpacing: "0.25em", color: C.deep }}>B</div>
+          <DrawIcon paths={ICON.handshake} progress={ramp(frame, [32, 60], [0, 1])} size={170} color={C.deep} width={4.5} />
+          <div style={{ textAlign: "center", fontFamily: F.grotesk, fontWeight: 900, fontSize: 44, color: C.deep, lineHeight: 1.15 }}>
+            Des messages.
+            <br />
+            Des commandes.
+          </div>
+        </div>
+      </div>
+      <Ring at={32} x={W / 2 + half / 2 + 15} y={620} size={900} />
+      <At y={1080}>
+        <Words lines={["Même budget.", "*Pas le même résultat.*"]} delay={64} stagger={4} mode="rise" style={{ ...BOLD, fontSize: 96 }} accentStyle={{ ...ACCENT_SERIF, fontSize: 112 }} />
+      </At>
+    </SceneFrame>
+  );
+};
+
+const Lesson: React.FC = () => (
+  <SceneFrame seed="v3less" variant="ivory" dur={170} zoom={[1, 1.05]}>
+    <At y={470}>
+      <Words lines={["Payer", "*ne suffit pas.*"]} delay={4} stagger={5} mode="drop" style={{ ...BOLD, color: C.deep, fontSize: 170 }} accentStyle={{ ...ACCENT_SERIF, fontSize: 190 }} />
+    </At>
+    <At y={980}>
+      <Words
+        lines={["La pub *amplifie*", "ce que vous montrez.", "En bien comme en mal."]}
+        delay={44}
+        stagger={2}
+        mode="blur"
+        style={{ fontFamily: F.grotesk, fontWeight: 700, fontSize: 62, color: C.deep, lineHeight: 1.18, letterSpacing: "-0.02em" }}
+        accentStyle={{ ...ACCENT_SERIF, fontSize: 76 }}
+      />
+    </At>
+  </SceneFrame>
+);
+
+const RealCase: React.FC = () => (
+  <SceneFrame seed="v3real" variant="deep" dur={120} zoom={[1.08, 1]} grid="perspective">
+    <At y={470}>
+      <Tag style={{ fontSize: 34 }}>06 · Un cas réel</Tag>
+    </At>
+    <At y={580}>
+      <Words lines={["AKP Kustom"]} delay={6} stagger={5} mode="pop" style={{ fontFamily: F.condensed, fontSize: 190, color: C.ivory, lineHeight: 1 }} />
+    </At>
+    <At y={830}>
+      <Words lines={["Atelier textile liégeois.", "*Premier test publicitaire.*"]} delay={26} stagger={3} mode="rise" style={{ ...SUB, fontSize: 56, color: C.ivory }} accentStyle={{ ...ACCENT_SERIF, fontSize: 66 }} />
+    </At>
+    <Ring at={8} x={W / 2} y={680} size={1200} />
+    <Dust count={14} seed="v3rl" />
+  </SceneFrame>
+);
+
+const Clients: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const s = pop(frame, fps, 4, SPRING.heavy);
+  return (
+    <SceneFrame seed="v3cli" variant="night" dur={110} zoom={[1, 1.06]}>
+      <At y={300}>
+        <Tag style={{ fontSize: 34 }}>Et surtout</Tag>
+      </At>
+      <At y={400}>
+        <div style={{ fontFamily: F.condensed, fontSize: 520, lineHeight: 1, color: C.ivory, transform: `scale(${s})`, opacity: s > 0.01 ? 1 : 0 }}>2</div>
+      </At>
+      <At y={960}>
+        <Words lines={["*clients signés*"]} delay={14} stagger={4} mode="rise" style={{ fontSize: 140 }} accentStyle={{ ...ACCENT_SERIF, fontSize: 150 }} />
+      </At>
+      <At y={1170}>
+        <Words lines={["dès le premier test."]} delay={26} stagger={3} mode="blur" style={{ ...SUB, fontSize: 60, color: C.ivory }} />
+      </At>
+      <Burst at={6} x={W / 2} y={660} count={22} power={500} seed="cli" />
+    </SceneFrame>
+  );
+};
+
+const Final: React.FC = () => (
+  <SceneFrame seed="v3fin" variant="deep" dur={160} zoom={[1.05, 1]} grid>
+    <At y={430}>
+      <Words lines={["Le bon contenu."]} delay={2} stagger={3} mode="rise" style={{ ...BOLD, fontSize: 110 }} />
+    </At>
+    <At y={570}>
+      <Words lines={["La bonne cible."]} delay={20} stagger={3} mode="rise" style={{ ...BOLD, fontSize: 110 }} />
+    </At>
+    <At y={700}>
+      <Words lines={["*Le bon suivi.*"]} delay={38} stagger={3} mode="rise" style={{ ...BOLD, fontSize: 110 }} accentStyle={{ ...ACCENT_SERIF, fontSize: 140 }} />
+    </At>
+    <At y={1010}>
+      <Words lines={["C'est ça qui transforme", "un budget pub *en clients.*"]} delay={66} stagger={2} mode="blur" style={{ ...SUB, fontSize: 58, color: C.ivory }} accentStyle={{ ...ACCENT_SERIF, fontSize: 70 }} />
+    </At>
+  </SceneFrame>
+);
 
 // ─── Composition ────────────────────────────────────────────────────────────
 
 const SCENES: Scene[] = [
   { id: "intro", duration: 80, element: <Intro />, exit: { presentation: swipeUp(), timing: timing(18) } },
+  { id: "hook", duration: 120, element: <Hook />, exit: { presentation: glitchSlice(), timing: timing(14, (t) => t) } },
+  { id: "what", duration: 170, element: <WhatFor />, exit: { presentation: wipe({ direction: "from-right" }), timing: timing(18) } },
+  { id: "budget", duration: 160, element: <AnyBudget />, exit: { presentation: swipeUp(), timing: timing(18) } },
+  { id: "pros", duration: 200, element: <ListScene seed="v3pro" variant="night" tag="03 · Les avantages" title={["Les *avantages*"]} rows={PROS} good dur={200} />, exit: { presentation: glitchSlice(), timing: timing(14, (t) => t) } },
+  { id: "cons", duration: 180, element: <ListScene seed="v3con" variant="deep" tag="04 · Les limites" title={["Les *limites*"]} rows={CONS} good={false} dur={180} />, exit: { presentation: splitDoors(), timing: timing(20) } },
+  { id: "duel", duration: 330, element: <Duel />, exit: { presentation: flip({ direction: "from-right" }), timing: timing(20) } },
+  { id: "verdict", duration: 170, element: <Verdict />, exit: { presentation: inkDrop({ x: W / 2, y: 900 }), timing: timing(22) } },
+  { id: "lesson", duration: 170, element: <Lesson />, exit: { presentation: swipeUp(), timing: timing(18) } },
+  { id: "real", duration: 120, element: <RealCase />, exit: { presentation: swipeUp(), timing: timing(18) } },
   { id: "stake", duration: 110, element: <Stake />, exit: { presentation: glitchSlice(), timing: timing(14, (t) => t) } },
   { id: "revenue", duration: 120, element: <Revenue />, exit: { presentation: inkDrop({ x: W / 2, y: 600 }), timing: timing(22) } },
   { id: "multiplier", duration: 125, element: <Multiplier />, exit: { presentation: splitDoors(), timing: timing(20) } },
-  { id: "amplify", duration: 170, element: <Amplify />, exit: { presentation: flip({ direction: "from-bottom" }), timing: timing(22) } },
-  { id: "benefits", duration: 240, element: <Benefits />, exit: { presentation: wipe({ direction: "from-top-left" }), timing: timing(20) } },
+  { id: "clients", duration: 110, element: <Clients />, exit: { presentation: swipeUp(), timing: timing(18) } },
+  { id: "final", duration: 160, element: <Final />, exit: { presentation: wipe({ direction: "from-top-left" }), timing: timing(20) } },
   { id: "end", duration: END_CARD_DURATION, element: <EndCard /> },
 ];
 
@@ -449,6 +581,14 @@ const starts = sceneStarts(SCENES);
 export const V3Advertising: React.FC = () => (
   <AbsoluteFill style={{ background: C.deep }}>
     <SceneSeries scenes={SCENES} />
-    <BrandLogo variant="slot" handoff={64} hideAt={starts.end} invert={[[starts.multiplier + 6, starts.amplify + 4]]} />
+    <BrandLogo
+      variant="slot"
+      handoff={64}
+      hideAt={starts.end}
+      invert={[
+        [starts.lesson + 6, starts.real + 4],
+        [starts.multiplier + 6, starts.clients + 4],
+      ]}
+    />
   </AbsoluteFill>
 );

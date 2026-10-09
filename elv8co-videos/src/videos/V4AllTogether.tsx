@@ -9,7 +9,7 @@ import { At, SceneFrame } from "../components/SceneFrame";
 import { ACCENT_SERIF, Odometer, OutlineFill, Tag, Typewriter, useCount, Words } from "../components/Kinetic";
 import { Burst, Dust, Flash, Ring } from "../components/Particles";
 import { DrawIcon, ICON } from "../components/Icons";
-import { BrandLogo, copperTextStyle as copperText, Dot } from "../components/Logo";
+import { BrandLogo, Dot } from "../components/Logo";
 import { END_CARD_DURATION, EndCard } from "../components/EndCard";
 import { Scene, SceneSeries, sceneStarts, seriesDuration } from "../components/SceneSeries";
 import { blinds, copperSweep, glitchSlice, inkDrop, spinZoom, splitDoors, swipeUp, timing, zoomPunch } from "../transitions";
@@ -717,53 +717,60 @@ const Without: React.FC = () => (
   </SceneFrame>
 );
 
+/**
+ * Cas réel de personal branding dans un domaine inattendu : le vin.
+ * Source vérifiée (Wikipedia, « Gary Vaynerchuk ») : Wine Library TV lancée en février 2006,
+ * 1 000 épisodes en 2011, magasin familial passé de 3 M$ à 60 M$ de chiffre d'affaires par an.
+ */
 const RealProof: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const views = useCount(0, 24900, 40, 90);
-  const rev = useCount(20, 780, 120, 165);
+  const eps = useCount(0, 1000, 40, 90);
+  const rev = useCount(3, 60, 120, 168);
   const card = (d: number) => pop(frame, fps, d, SPRING.snappy);
   const c1 = card(34);
   const c2 = card(110);
-  const x = pop(frame, fps, 180, SPRING.bouncy);
+  const x = pop(frame, fps, 186, SPRING.bouncy);
   const box: React.CSSProperties = { padding: "32px 40px", borderRadius: 34, background: "rgba(243,238,230,0.07)", border: `2px solid ${C.copperLight}66` };
   return (
     <SceneFrame seed="v4real" variant="deep" dur={250} zoom={[1.05, 1]} grid="perspective">
       <At y={250}>
-        <Tag>Et en vrai ?</Tag>
+        <Tag>Un cas célèbre</Tag>
       </At>
       <At y={320}>
-        <Words lines={["AKP Kustom"]} delay={4} stagger={5} mode="pop" style={{ fontFamily: F.condensed, fontSize: 150, color: C.ivory, lineHeight: 1 }} />
+        <Words lines={["Gary Vaynerchuk"]} delay={4} stagger={5} mode="pop" style={{ fontFamily: F.condensed, fontSize: 132, color: C.ivory, lineHeight: 1 }} />
       </At>
-      <At y={500}>
-        <Words lines={["Atelier textile liégeois."]} delay={14} stagger={3} mode="blur" style={{ ...SUB, fontSize: 48, color: C.ivory }} />
+      <At y={480}>
+        <Words lines={["Le magasin de vin *de ses parents.*"]} delay={14} stagger={3} mode="blur" style={{ ...SUB, fontSize: 46, color: C.ivory }} accentStyle={{ ...ACCENT_SERIF, fontSize: 56 }} />
       </At>
-      <div style={{ position: "absolute", left: 90, right: 90, top: 640, ...box, opacity: Math.min(1, c1 * 1.5), transform: `translateY(${(1 - c1) * 60}px)` }}>
-        <ServiceChip kind="square" label="VIDÉO" />
-        <Odometer value={views.value} final={24900} velocity={views.velocity} style={{ fontFamily: F.condensed, fontSize: 150, color: C.ivory, marginTop: 14 }} />
-        <div style={{ ...SUB, fontSize: 42, color: C.ivory, marginTop: 6 }}>vues organiques, sans payer</div>
-      </div>
-      <div style={{ position: "absolute", left: 90, right: 90, top: 1000, ...box, opacity: Math.min(1, c2 * 1.5), transform: `translateY(${(1 - c2) * 60}px)` }}>
-        <ServiceChip kind="triangle" label="PUB" />
-        <div style={{ display: "flex", alignItems: "baseline", gap: 26, marginTop: 14 }}>
-          <span style={{ fontFamily: F.condensed, fontSize: 110, color: C.ivoryDim }}>20 €</span>
-          <span style={{ fontFamily: F.grotesk, fontWeight: 900, fontSize: 70, color: C.copperLight }}>→</span>
-          <span style={{ fontFamily: F.condensed, fontSize: 150, color: C.ivory }}>{`${Math.round(rev.value)} €`}</span>
+      <div style={{ position: "absolute", left: 90, right: 90, top: 620, ...box, opacity: Math.min(1, c1 * 1.5), transform: `translateY(${(1 - c1) * 60}px)` }}>
+        <ServiceChip kind="circle" label="FACE CAMÉRA · DÈS 2006" />
+        <div style={{ display: "flex", alignItems: "baseline", gap: 22, marginTop: 14 }}>
+          <Odometer value={eps.value} final={1000} velocity={eps.velocity} style={{ fontFamily: F.condensed, fontSize: 150, color: C.ivory }} />
+          <span style={{ fontFamily: F.grotesk, fontWeight: 800, fontSize: 52, color: C.ivory }}>épisodes</span>
         </div>
-        <div style={{ ...SUB, fontSize: 42, color: C.ivory, marginTop: 6 }}>de chiffre d'affaires</div>
+        <div style={{ ...SUB, fontSize: 40, color: C.ivory, marginTop: 6 }}>d'une émission vidéo… sur le vin.</div>
+      </div>
+      <div style={{ position: "absolute", left: 90, right: 90, top: 990, ...box, opacity: Math.min(1, c2 * 1.5), transform: `translateY(${(1 - c2) * 60}px)` }}>
+        <ServiceChip kind="square" label="CHIFFRE D'AFFAIRES / AN" />
+        <div style={{ display: "flex", alignItems: "baseline", gap: 26, marginTop: 14 }}>
+          <span style={{ fontFamily: F.condensed, fontSize: 110, color: C.ivoryDim }}>3 M$</span>
+          <span style={{ fontFamily: F.grotesk, fontWeight: 900, fontSize: 70, color: C.copperLight }}>→</span>
+          <span style={{ fontFamily: F.condensed, fontSize: 150, color: C.ivory }}>{`${Math.round(rev.value)} M$`}</span>
+        </div>
+        <div style={{ ...SUB, fontSize: 40, color: C.ivory, marginTop: 6 }}>pour le magasin familial.</div>
       </div>
       <At y={1390}>
-        <div style={{ display: "flex", alignItems: "center", gap: 30, transform: `scale(${x})`, opacity: x > 0.01 ? 1 : 0 }}>
-          <span style={{ fontFamily: F.condensed, fontSize: 130, ...copperText }}>×39</span>
-          <span style={{ fontFamily: F.grotesk, fontWeight: 800, fontSize: 52, color: C.ivory, lineHeight: 1.1 }}>
-            2 clients
-            <br />
-            signés
-          </span>
+        <div style={{ textAlign: "center", transform: `scale(${x})`, opacity: x > 0.01 ? 1 : 0 }}>
+          <div style={{ fontFamily: F.grotesk, fontWeight: 900, fontSize: 64, color: C.ivory, letterSpacing: "-0.03em", lineHeight: 1.1 }}>Pas une star.</div>
+          <div style={{ ...ACCENT_SERIF, fontSize: 80, lineHeight: 1.1 }}>Un caviste qui se montre.</div>
         </div>
       </At>
-      <Flash at={180} max={0.35} color={C.copperLight} />
-      <Burst at={182} x={W / 2} y={1460} count={28} power={600} seed="v4akp" />
+      <div style={{ position: "absolute", left: 0, right: 0, top: 1630, textAlign: "center", fontFamily: F.mono, fontSize: 20, letterSpacing: "0.15em", color: C.steel, textTransform: "uppercase" }}>
+        Source : Wikipedia, « Gary Vaynerchuk »
+      </div>
+      <Flash at={186} max={0.3} color={C.copperLight} />
+      <Burst at={188} x={W / 2} y={1460} count={24} power={560} seed="v4gv" />
     </SceneFrame>
   );
 };

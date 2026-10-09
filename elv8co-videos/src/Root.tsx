@@ -6,6 +6,8 @@ import { V1_DURATION, V1PersonalBranding } from "./videos/V1PersonalBranding";
 import { V2_DURATION, V2VideoContent } from "./videos/V2VideoContent";
 import { V3_DURATION, V3Advertising } from "./videos/V3Advertising";
 import { V4_DURATION, V4AllTogether } from "./videos/V4AllTogether";
+import { MoonSheet } from "./videos/MoonSheet";
+import { V5_DURATION, V5Geo } from "./videos/V5Geo";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -14,6 +16,8 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="V2-VideoContent" component={V2VideoContent} durationInFrames={V2_DURATION} fps={FPS} width={W} height={H} />
       <Composition id="V3-Advertising" component={V3Advertising} durationInFrames={V3_DURATION} fps={FPS} width={W} height={H} />
       <Composition id="V4-AllTogether" component={V4AllTogether} durationInFrames={V4_DURATION} fps={FPS} width={W} height={H} />
+      <Composition id="V5-Geo" component={V5Geo} durationInFrames={V5_DURATION} fps={FPS} width={W} height={H} />
+      <Composition id="Lune-Poses" component={MoonSheet} durationInFrames={120} fps={FPS} width={W} height={H} />
     </>
   );
 };

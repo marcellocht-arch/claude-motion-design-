@@ -8,6 +8,8 @@ import { CLAMP, pop, SPRING } from "../anim";
  * - `talk` : fenêtres [début, fin] (en frames de la scène) où la bouche bouge, à caler sur la voix off.
  * - `poses` : liste [frame, pose] ; la lune passe d'une pose à l'autre en douceur.
  */
+/** Corps disponibles : la lune ELV8, et des mascottes d'exemple pour d'autres métiers. */
+export type MascotBody = "moon" | "house" | "drop" | "loaf";
 export type MoonPose = "idle" | "wave" | "pointRight" | "pointLeft" | "pointUp" | "open" | "think";
 
 type Arm = [number, number]; // angles (degrés écran : 0 = droite, 90 = bas) bras / avant-bras
@@ -70,7 +72,8 @@ export const Moon: React.FC<{
   poses?: [number, MoonPose][];
   delay?: number;
   style?: React.CSSProperties;
-}> = ({ x, y, size = 280, talk = [], poses = [[0, "idle"]], delay = 0, style }) => {
+  body?: MascotBody;
+}> = ({ x, y, size = 280, talk = [], poses = [[0, "idle"]], delay = 0, style, body = "moon" }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const enter = pop(frame, fps, delay, SPRING.bouncy);
@@ -106,7 +109,7 @@ export const Moon: React.FC<{
         </defs>
         <g transform={`translate(0 ${bob})`}>
           {/* halo */}
-          <circle cx={100} cy={100} r={118} fill="url(#moonHalo)" />
+          {body === "moon" ? <circle cx={100} cy={100} r={118} fill="url(#moonHalo)" /> : null}
           {/* jambes */}
           <path d={`M82 176 Q${78 + step * 3} 202 ${76 + step * 5} 226`} stroke={ivory} strokeWidth={8} fill="none" strokeLinecap="round" />
           <path d={`M118 176 Q${122 - step * 3} 202 ${124 - step * 5} 226`} stroke={ivory} strokeWidth={8} fill="none" strokeLinecap="round" />
@@ -119,18 +122,45 @@ export const Moon: React.FC<{
           <circle cx={A.hx} cy={A.hy} r={9.5} fill={ivory} />
           {/* corps-lune */}
           <g transform={`translate(100 100) scale(${1 / squash} ${squash}) translate(-100 -100)`}>
-            <circle cx={100} cy={100} r={80} fill="url(#moonFace)" stroke={C.copperLight} strokeWidth={2.5} />
-            {/* cratères */}
-            {[
-              [58, 50, 12],
-              [140, 44, 9],
-              [152, 138, 13],
-              [46, 142, 8],
-              [112, 166, 7],
-              [92, 34, 5],
-            ].map(([cx, cy, rr], i) => (
-              <circle key={i} cx={cx} cy={cy} r={rr} fill="#D9C8B2" opacity={0.55} />
-            ))}
+            {body === "moon" ? (
+              <>
+                <circle cx={100} cy={100} r={80} fill="url(#moonFace)" stroke={C.copperLight} strokeWidth={2.5} />
+                {/* cratères */}
+                {[
+                  [58, 50, 12],
+                  [140, 44, 9],
+                  [152, 138, 13],
+                  [46, 142, 8],
+                  [112, 166, 7],
+                  [92, 34, 5],
+                ].map(([cx, cy, rr], i) => (
+                  <circle key={i} cx={cx} cy={cy} r={rr} fill="#D9C8B2" opacity={0.55} />
+                ))}
+              </>
+            ) : null}
+            {body === "house" ? (
+              <>
+                <rect x={128} y={22} width={18} height={40} fill="#8E3E2C" />
+                <rect x={30} y={74} width={140} height={108} rx={10} fill="#F4E7D6" stroke="#8E3E2C" strokeWidth={3} />
+                <path d="M100 10 L188 82 L12 82 Z" fill="#B5543A" stroke="#8E3E2C" strokeWidth={3} strokeLinejoin="round" />
+                <rect x={44} y={150} width={22} height={22} rx={3} fill="#9CC7E3" stroke="#8E3E2C" strokeWidth={2} />
+                <rect x={134} y={150} width={22} height={22} rx={3} fill="#9CC7E3" stroke="#8E3E2C" strokeWidth={2} />
+              </>
+            ) : null}
+            {body === "drop" ? (
+              <>
+                <path d="M100 8 C128 56 178 92 178 126 C178 168 144 186 100 186 C56 186 22 168 22 126 C22 92 72 56 100 8 Z" fill="#4FA3D9" stroke="#1F6A9E" strokeWidth={3} />
+                <ellipse cx={66} cy={100} rx={10} ry={22} fill="#FFFFFF" opacity={0.45} transform="rotate(20 66 100)" />
+              </>
+            ) : null}
+            {body === "loaf" ? (
+              <>
+                <path d="M24 170 L24 112 C24 46 176 46 176 112 L176 170 Q176 184 162 184 L38 184 Q24 184 24 170 Z" fill="#E3A65B" stroke="#9A5B22" strokeWidth={3} />
+                {[0, 1, 2].map((i) => (
+                  <path key={i} d={`M${66 + i * 30} 52 Q${76 + i * 30} 62 ${72 + i * 30} 74`} stroke="#9A5B22" strokeWidth={4} fill="none" strokeLinecap="round" />
+                ))}
+              </>
+            ) : null}
             {/* joues */}
             <circle cx={62} cy={114} r={10} fill={C.copperLight} opacity={0.35} />
             <circle cx={138} cy={114} r={10} fill={C.copperLight} opacity={0.35} />
@@ -155,8 +185,12 @@ export const Moon: React.FC<{
             )}
           </g>
           {/* nœud papillon cuivre, signature ELV8 */}
-          <path d="M100 182 L86 174 L86 190 Z M100 182 L114 174 L114 190 Z" fill={C.copper} />
-          <circle cx={100} cy={182} r={4} fill={C.copperLight} />
+          {body === "moon" ? (
+            <>
+              <path d="M100 182 L86 174 L86 190 Z M100 182 L114 174 L114 190 Z" fill={C.copper} />
+              <circle cx={100} cy={182} r={4} fill={C.copperLight} />
+            </>
+          ) : null}
           {/* bras droit (devant) */}
           <path d={B.d} stroke={C.copperDark} strokeWidth={12} fill="none" strokeLinecap="round" />
           <circle cx={B.hx} cy={B.hy} r={11.5} fill={C.copperDark} />

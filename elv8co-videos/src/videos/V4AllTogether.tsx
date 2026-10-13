@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, interpolate, random, Sequence, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Audio, interpolate, random, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { iris } from "@remotion/transitions/iris";
 import { slide } from "@remotion/transitions/slide";
 import { wipe } from "@remotion/transitions/wipe";
@@ -7,12 +7,13 @@ import { C, EASE, F, GRAD, H, W } from "../theme";
 import { beatPulse, CLAMP, pop, ramp, SPRING } from "../anim";
 import { At, SceneFrame } from "../components/SceneFrame";
 import { ACCENT_SERIF, Odometer, OutlineFill, Tag, Typewriter, useCount, Words } from "../components/Kinetic";
-import { Burst, Dust, Flash, Ring } from "../components/Particles";
+import { Burst, Flash, Ring } from "../components/Particles";
 import { DrawIcon, ICON } from "../components/Icons";
 import { BrandLogo, Dot } from "../components/Logo";
 import { END_CARD_DURATION, EndCard } from "../components/EndCard";
 import { Scene, SceneSeries, sceneStarts, seriesDuration } from "../components/SceneSeries";
-import { blinds, copperSweep, glitchSlice, inkDrop, spinZoom, splitDoors, swipeUp, timing, zoomPunch } from "../transitions";
+import PLAN from "./v4plan.json";
+import { blinds, copperSweep, glitchSlice, inkDrop, splitDoors, swipeUp, timing, zoomPunch } from "../transitions";
 
 type Kind = "circle" | "square" | "triangle";
 
@@ -20,7 +21,20 @@ const SHAPE_COLOR: Record<Kind, string> = { circle: C.copper, square: C.ivory, t
 
 const BOLD: React.CSSProperties = { fontFamily: F.grotesk, fontWeight: 900, color: C.ivory, lineHeight: 1.04, letterSpacing: "-0.035em" };
 const SUB: React.CSSProperties = { fontFamily: F.grotesk, fontWeight: 500, color: C.ivoryDim, lineHeight: 1.25, letterSpacing: "-0.01em" };
-const PILLAR_DUR = 140;
+// Timeline calée sur le tempo : chaque scène commence sur un temps (voir v4plan.json, lu aussi par scripts/son.py).
+const BEAT_F = (PLAN.fps * 60) / PLAN.bpm;
+const STARTS_F: Record<string, number> = {};
+const DUR: Record<string, number> = {};
+{
+  let cum = 0;
+  PLAN.scenes.forEach((sc, i) => {
+    STARTS_F[sc.id] = Math.round(cum * BEAT_F);
+    cum += sc.beats;
+    const next = PLAN.scenes[i + 1];
+    DUR[sc.id] = next ? Math.round(cum * BEAT_F) - STARTS_F[sc.id] + sc.exit : PLAN.endFrames;
+  });
+}
+const PILLAR_DUR = DUR.trust;
 
 /** Simple side-view car, 100×100 stroke paths. */
 const CAR = [
@@ -79,11 +93,6 @@ const GeoBackdrop: React.FC<{ opacity?: number }> = ({ opacity = 0.07 }) => {
 
 // ─── Scenes ────────────────────────────────────────────────────────────────
 
-const Intro: React.FC = () => (
-  <SceneFrame seed="v4intro" dur={80} zoom={[1.1, 1]} rotate={-3} back={<GeoBackdrop opacity={0.1} />}>
-    <Dust count={30} seed="v4d" />
-  </SceneFrame>
-);
 
 const PANEL_KINDS: Kind[] = ["circle", "square", "triangle"];
 const PANEL_LABELS = ["BRANDING", "VIDÉO", "PUB"];
@@ -91,10 +100,10 @@ const PANEL_LABELS = ["BRANDING", "VIDÉO", "PUB"];
 const Hook: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const FUSE = 78;
-  const merge = ramp(frame, [64, FUSE], [0, 1], EASE.in);
+  const FUSE = 66; // = temps 8 de la vidéo (temps fort de la musique)
+  const merge = ramp(frame, [52, FUSE], [0, 1], EASE.in);
   const nested = pop(frame, fps, FUSE, SPRING.bouncy);
-  const divider = ramp(frame, [2, 18], [0, 1], EASE.inOut) * (1 - ramp(frame, [58, 68], [0, 1]));
+  const divider = ramp(frame, [2, 18], [0, 1], EASE.inOut) * (1 - ramp(frame, [46, 56], [0, 1]));
   return (
     <SceneFrame seed="v4hook" dur={150} zoom={[1, 1.05]} back={<GeoBackdrop />}>
       {/* triptych dividers */}
@@ -154,10 +163,10 @@ const Hook: React.FC = () => {
       <Burst at={FUSE} x={W / 2} y={980} count={36} power={700} seed="v4fuse" />
       {/* copy */}
       <At y={280}>
-        <Words lines={["*Seuls,*"]} delay={18} mode="blur" exitAt={56} style={{ fontSize: 170 }} />
+        <Words lines={["*Seuls,*"]} delay={14} mode="blur" exitAt={46} style={{ fontSize: 170 }} />
       </At>
       <At y={470}>
-        <Words lines={["ils fonctionnent."]} delay={24} stagger={3} mode="rise" exitAt={56} style={{ fontFamily: F.grotesk, fontWeight: 900, fontSize: 96, color: C.ivory, letterSpacing: "-0.03em" }} />
+        <Words lines={["ils fonctionnent."]} delay={20} stagger={3} mode="rise" exitAt={46} style={{ fontFamily: F.grotesk, fontWeight: 900, fontSize: 96, color: C.ivory, letterSpacing: "-0.03em" }} />
       </At>
       <At y={280}>
         <Words lines={["*Ensemble,*"]} delay={FUSE - 4} mode="drop" style={{ fontSize: 170 }} />
@@ -208,10 +217,10 @@ const Pillar: React.FC<{
         <DrawIcon paths={icon} progress={ramp(frame, [14, 34], [0, 1])} size={180} color={C.ivory} width={5} />
       </div>
       <At y={1110}>
-        <OutlineFill text={keyword} progress={ramp(frame, [30, 64], [0, 1], EASE.inOut)} stroke={C.copperLight} style={{ fontFamily: F.serif, fontStyle: "italic", fontSize: 180, lineHeight: 1.1, paddingRight: 20, opacity: ramp(frame, [26, 32], [0, 1]) }} />
+        <OutlineFill text={keyword} progress={ramp(frame, [20, 48], [0, 1], EASE.inOut)} stroke={C.copperLight} style={{ fontFamily: F.serif, fontStyle: "italic", fontSize: 180, lineHeight: 1.1, paddingRight: 20, opacity: ramp(frame, [16, 22], [0, 1]) }} />
       </At>
       <At y={1370}>
-        <Words lines={role} delay={58} stagger={2} mode="blur" style={{ ...SUB, fontSize: 50, color: C.ivory }} accentStyle={{ ...ACCENT_SERIF, fontSize: 60 }} />
+        <Words lines={role} delay={40} stagger={2} mode="blur" style={{ ...SUB, fontSize: 50, color: C.ivory }} accentStyle={{ ...ACCENT_SERIF, fontSize: 60 }} />
       </At>
     </SceneFrame>
   );
@@ -317,7 +326,6 @@ const Fusion: React.FC = () => {
         </div>
       ) : null}
       <Flash at={62} max={0.55} color={C.copperLight} />
-      <Burst at={64} x={W / 2} y={780} count={40} power={800} seed="v4fusion" />
       <Ring at={64} x={W / 2} y={780} size={1500} />
       <Sequence from={70} layout="none">
         <At y={1180}>
@@ -634,7 +642,6 @@ const Step: React.FC<{
             padding: "22px 46px",
             borderRadius: 999,
             background: GRAD.copper,
-            boxShadow: `0 0 60px ${C.copper}66`,
             fontFamily: F.grotesk,
             fontWeight: 900,
             fontSize: 54,
@@ -647,7 +654,6 @@ const Step: React.FC<{
           {result}
         </div>
       </At>
-      <Burst at={dur - 60} x={W / 2} y={1470} count={18} power={420} seed={`${seed}b`} />
       <Illustratif />
     </SceneFrame>
   );
@@ -726,11 +732,11 @@ const RealProof: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const eps = useCount(0, 1000, 40, 90);
-  const rev = useCount(3, 60, 120, 168);
+  const rev = useCount(3, 60, 104, 150);
   const card = (d: number) => pop(frame, fps, d, SPRING.snappy);
   const c1 = card(34);
-  const c2 = card(110);
-  const x = pop(frame, fps, 186, SPRING.bouncy);
+  const c2 = card(96);
+  const x = pop(frame, fps, 164, SPRING.bouncy);
   const box: React.CSSProperties = { padding: "32px 40px", borderRadius: 34, background: "rgba(243,238,230,0.07)", border: `2px solid ${C.copperLight}66` };
   return (
     <SceneFrame seed="v4real" variant="deep" dur={250} zoom={[1.05, 1]} grid="perspective">
@@ -769,8 +775,6 @@ const RealProof: React.FC = () => {
       <div style={{ position: "absolute", left: 0, right: 0, top: 1630, textAlign: "center", fontFamily: F.mono, fontSize: 20, letterSpacing: "0.15em", color: C.steel, textTransform: "uppercase" }}>
         Source : Wikipedia, « Gary Vaynerchuk »
       </div>
-      <Flash at={186} max={0.3} color={C.copperLight} />
-      <Burst at={188} x={W / 2} y={1460} count={24} power={560} seed="v4gv" />
     </SceneFrame>
   );
 };
@@ -809,32 +813,31 @@ const Offer: React.FC = () => {
 // ─── Composition ────────────────────────────────────────────────────────────
 
 const SCENES: Scene[] = [
-  { id: "intro", duration: 80, element: <Intro />, exit: { presentation: spinZoom(), timing: timing(20) } },
-  { id: "hook", duration: 150, element: <Hook />, exit: { presentation: swipeUp(), timing: timing(18) } },
-  { id: "trap", duration: 230, element: <Trap />, exit: { presentation: iris({ width: W, height: H }), timing: timing(20) } },
+  { id: "hook", duration: DUR.hook, element: <Hook />, exit: { presentation: swipeUp(), timing: timing(18) } },
+  { id: "trap", duration: DUR.trap, element: <Trap />, exit: { presentation: iris({ width: W, height: H }), timing: timing(20) } },
   {
     id: "trust",
-    duration: PILLAR_DUR,
+    duration: DUR.trust,
     element: <Pillar kind="circle" n="01" title="Personal branding" keyword="confiance." icon={ICON.handshake} seed="v4p1" fx={<TrustFx />} role={["On voit *qui vous êtes.*", "On vous fait confiance."]} />,
     exit: { presentation: slide({ direction: "from-right" }), timing: timing(18) },
   },
   {
     id: "regularity",
-    duration: PILLAR_DUR,
+    duration: DUR.regularity,
     element: <Pillar kind="square" n="02" title="Contenu vidéo" keyword="régularité." icon={ICON.play} seed="v4p2" grid variant="deep" fx={<RegularityFx />} role={["Une vidéo *chaque semaine.*", "On ne vous oublie pas."]} />,
     exit: { presentation: wipe({ direction: "from-left" }), timing: timing(18) },
   },
   {
     id: "reach",
-    duration: PILLAR_DUR,
+    duration: DUR.reach,
     element: <Pillar kind="triangle" n="03" title="Publicité" keyword="portée." icon={ICON.broadcast} seed="v4p3" grid="perspective" fx={<ReachFx />} role={["Vos vidéos montrées", "*aux gens du coin.*"]} />,
     exit: { presentation: zoomPunch(), timing: timing(18) },
   },
-  { id: "fusion", duration: 150, element: <Fusion />, exit: { presentation: blinds(), timing: timing(20) } },
-  { id: "example", duration: 120, element: <ExampleTitle />, exit: { presentation: slide({ direction: "from-bottom" }), timing: timing(18) } },
+  { id: "fusion", duration: DUR.fusion, element: <Fusion />, exit: { presentation: blinds(), timing: timing(20) } },
+  { id: "example", duration: DUR.example, element: <ExampleTitle />, exit: { presentation: slide({ direction: "from-bottom" }), timing: timing(18) } },
   {
     id: "step1",
-    duration: 190,
+    duration: DUR.step1,
     element: (
       <Step
         seed="v4s1"
@@ -844,14 +847,14 @@ const SCENES: Scene[] = [
         visual={<FaceCamVisual />}
         bullets={["Il se présente, lui et son garage", "Il explique sa garantie, sans jargon", "On voit l'atelier et l'équipe"]}
         result="On le reconnaît."
-        dur={190}
+        dur={DUR.step1}
       />
     ),
     exit: { presentation: wipe({ direction: "from-right" }), timing: timing(18) },
   },
   {
     id: "step2",
-    duration: 190,
+    duration: DUR.step2,
     element: (
       <Step
         seed="v4s2"
@@ -862,14 +865,14 @@ const SCENES: Scene[] = [
         bullets={["Une voiture du parc en 30 secondes", "Un conseil d'entretien", "Les coulisses de l'atelier"]}
         result="On le suit."
         variant="deep"
-        dur={190}
+        dur={DUR.step2}
       />
     ),
     exit: { presentation: wipe({ direction: "from-right" }), timing: timing(18) },
   },
   {
     id: "step3",
-    duration: 200,
+    duration: DUR.step3,
     element: (
       <Step
         seed="v4s3"
@@ -879,16 +882,16 @@ const SCENES: Scene[] = [
         visual={<RadiusVisual />}
         bullets={["À 15 km autour du garage", "Aux gens intéressés par l'auto", "Un message clair : « Réservez un essai »"]}
         result="On le choisit."
-        dur={200}
+        dur={DUR.step3}
       />
     ),
     exit: { presentation: inkDrop({ x: W / 2, y: 1470 }), timing: timing(22) },
   },
-  { id: "journey", duration: 290, element: <Journey />, exit: { presentation: splitDoors(), timing: timing(20) } },
-  { id: "without", duration: 160, element: <Without />, exit: { presentation: glitchSlice(), timing: timing(14, (t) => t) } },
-  { id: "real", duration: 250, element: <RealProof />, exit: { presentation: copperSweep(), timing: timing(20) } },
-  { id: "question", duration: 170, element: <Question />, exit: { presentation: zoomPunch(), timing: timing(18) } },
-  { id: "offer", duration: 175, element: <Offer />, exit: { presentation: copperSweep(), timing: timing(20) } },
+  { id: "journey", duration: DUR.journey, element: <Journey />, exit: { presentation: splitDoors(), timing: timing(20) } },
+  { id: "without", duration: DUR.without, element: <Without />, exit: { presentation: glitchSlice(), timing: timing(14, (t) => t) } },
+  { id: "real", duration: DUR.real, element: <RealProof />, exit: { presentation: copperSweep(), timing: timing(20) } },
+  { id: "question", duration: DUR.question, element: <Question />, exit: { presentation: zoomPunch(), timing: timing(18) } },
+  { id: "offer", duration: DUR.offer, element: <Offer />, exit: { presentation: copperSweep(), timing: timing(20) } },
   { id: "end", duration: END_CARD_DURATION, element: <EndCard /> },
 ];
 
@@ -898,6 +901,10 @@ const starts = sceneStarts(SCENES);
 export const V4AllTogether: React.FC = () => (
   <AbsoluteFill style={{ background: C.deep }}>
     <SceneSeries scenes={SCENES} />
-    <BrandLogo variant="fusion" handoff={64} hideAt={starts.end} invert={[[starts.without + 10, starts.without + 150]]} />
+    <Audio src={staticFile("son-v4.m4a")} />
+    {/* Pas d'intro vide : la vidéo s'ouvre sur les trois formes, le logo file directement dans le coin. */}
+    <Sequence from={-64} layout="none">
+      <BrandLogo variant="fusion" handoff={64} hideAt={starts.end + 64} invert={[[starts.without + 74, starts.without + 214]]} />
+    </Sequence>
   </AbsoluteFill>
 );

@@ -16,5 +16,8 @@ export const MoonSheet: React.FC = () => (
         <div style={{ position: "absolute", left: (W / 3) * (i % 3), width: W / 3, top: 540 + Math.floor(i / 3) * 560, textAlign: "center", fontFamily: "JetBrains Mono", fontSize: 26, color: C.copperLight }}>{p}</div>
       </React.Fragment>
     ))}
+    {(["house", "drop", "loaf"] as const).map((b, i) => (
+      <Moon key={b} body={b} x={(W / 3) * ((i + 1) % 3 + 0.5) - (i === 2 ? 0 : 0)} y={1240 + (i === 2 ? 0 : 0)} size={240} poses={[[0, i === 1 ? "wave" : "open"]]} talk={[[0, 999]]} style={{ display: i === 0 ? "block" : "block" }} />
+    ))}
   </AbsoluteFill>
 );

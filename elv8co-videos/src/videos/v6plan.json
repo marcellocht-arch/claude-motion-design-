@@ -1,0 +1,15 @@
+{
+  "bpm": 110,
+  "fps": 30,
+  "endFrames": 165,
+  "scenes": [
+    { "id": "hook", "beats": 8, "exit": 16 },
+    { "id": "jargon", "beats": 10, "exit": 14 },
+    { "id": "solution", "beats": 8, "exit": 16 },
+    { "id": "gallery", "beats": 18, "exit": 18 },
+    { "id": "included", "beats": 16, "exit": 18 },
+    { "id": "how", "beats": 14, "exit": 16 },
+    { "id": "cta", "beats": 10, "exit": 20 },
+    { "id": "end", "beats": 0, "exit": 0 }
+  ]
+}

@@ -70,7 +70,7 @@ export const Words: React.FC<{
   let idx = 0;
   const justify = align === "center" ? "center" : align === "left" ? "flex-start" : "flex-end";
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: justify, gap: lineGap, ...style }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: justify, gap: lineGap, ...style, opacity: frame < delay - 1 ? 0 : style?.opacity }}>
       {lines.map((line, li) => (
         <div key={li} style={{ display: "flex", gap: "0.24em", justifyContent: justify, whiteSpace: "nowrap", ...lineStyles[li] }}>
           {tokenize(line).map((tok, wi) => {

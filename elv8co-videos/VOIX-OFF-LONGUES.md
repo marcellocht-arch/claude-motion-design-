@@ -60,8 +60,10 @@ Fichier : `L2-parcours-client.mp3` · 358 mots, environ 2,4 min.
 Requête visée : « comment les clients choisissent un commerce ». Sophie est une histoire inventée (« Exemple illustratif » à l'écran). En extraits, c'est une mini-série « Le parcours de Sophie » en 4 épisodes.
 
 ```
-[warmly] Imaginez Sophie. Sa chaudière vient de tomber en panne, un dimanche soir. Elle a besoin d'un chauffagiste. Vite. Et de confiance.
-Que fait-elle ? Suivons-la, étape par étape. Parce que le parcours de Sophie, c'est celui de vos futurs clients.
+[warmly] Dimanche soir. Plus d'eau chaude. La chaudière de Sophie vient de lâcher.
+Elle a besoin d'un chauffagiste. Vite. Et de confiance.
+Elle va en appeler un seul. Et ce ne sera pas forcément le meilleur. Ce sera celui qui aura gagné sa confiance en quelques minutes.
+Suivons-la, étape par étape. Parce que le parcours de Sophie, c'est celui de vos futurs clients.
 
 Sophie a besoin d'un chauffagiste. Premier réflexe : elle demande autour d'elle. Sa voisine lui donne un nom.
 Mais Sophie ne s'arrête pas là : elle vérifie. Elle tape le nom sur Google.

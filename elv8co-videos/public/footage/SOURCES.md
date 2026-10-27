@@ -11,7 +11,7 @@
 | liege-panorama.jpg | Photo fournie par Marcel le 27/10/2026 (Unsplash, licence Unsplash : usage commercial autorisé) | Aucun |
 | photo-telephone-soir.jpg | Unsplash (licence Unsplash), fournie par Marcel le 27/10/2026 | Écran du téléphone flouté (logos d'applications) |
 | photo-technicien.jpg | Unsplash (licence Unsplash), fournie par Marcel le 27/10/2026 | Marque des gants floutée |
-- photo-thermostat.jpg — Unsplash (envoyée par Marcel). Marque du thermostat floutée. Accroche « Plus d'eau chaude » (à étalonner froid/soir).
-- photo-artisan-souriant.jpg — Unsplash (envoyée par Marcel). Logo rouge du casque effacé. « Le patron explique ».
-- photo-salon-chaleureux.jpg — Unsplash (envoyée par Marcel). Fin chaleureuse.
-- photo-thermometre-froid.jpg — Unsplash (envoyée par Marcel). Réserve : plan « froid » possible dans l'accroche.
+| photo-thermostat.jpg | Unsplash (licence Unsplash), fournie par Marcel le 27/10/2026 | Marque du thermostat floutée ; étalonné froid dans la vidéo |
+| photo-thermometre-froid.jpg | Unsplash (licence Unsplash), fournie par Marcel le 27/10/2026 | Aucun |
+| photo-artisan-souriant.jpg | Unsplash (licence Unsplash), fournie par Marcel le 27/10/2026 | Logo du casque effacé |
+| photo-salon-chaleureux.jpg | Unsplash (licence Unsplash), fournie par Marcel le 27/10/2026 | Aucun |

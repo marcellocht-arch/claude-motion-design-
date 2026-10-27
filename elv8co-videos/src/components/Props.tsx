@@ -298,3 +298,70 @@ export const PhoneChat: React.FC<{ question?: string; reveal?: number; names?: s
     </div>
   </PhoneFrame>
 );
+
+/**
+ * Fiche d'établissement d'exemple (chauffagiste fictif), mise en page inspirée des fiches de cartes,
+ * sans logo ni marque. `step` 0 → 4 fait apparaître : catégorie, horaires, photos, services, avis + réponse.
+ */
+export const PhoneFiche: React.FC<{ name?: string; step?: number }> = ({ name = "Chauffagiste C", step = 4 }) => {
+  const on = (k: number) => ({ opacity: step >= k ? 1 : 0.12, transition: "none" });
+  const BTN = ["Itinéraire", "Appeler", "Site web", "Partager"];
+  return (
+    <PhoneFrame>
+      <div style={{ position: "absolute", inset: 0, background: "#FFFFFF" }} />
+      {/* bandeau photo */}
+      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 210, background: "#E8E1D6", overflow: "hidden" }}>
+        <div style={{ position: "absolute", left: 30, top: 50, transform: "scale(0.7)", transformOrigin: "0 0" }}>
+          <Van size={340} />
+        </div>
+      </div>
+      <div style={{ position: "absolute", left: 24, right: 24, top: 224 }}>
+        <div style={{ fontFamily: F.grotesk, fontWeight: 900, fontSize: 32, color: "#202124" }}>{name}</div>
+        <div style={{ fontFamily: F.grotesk, fontSize: 21, color: "#5F6368", marginTop: 6 }}>
+          4,6 <Stars n={4.6} size={20} /> (58)
+        </div>
+        <div style={{ fontFamily: F.grotesk, fontSize: 21, color: "#5F6368", marginTop: 4, ...on(1) }}>Chauffagiste · Liège</div>
+        <div style={{ fontFamily: F.grotesk, fontSize: 21, marginTop: 4, ...on(2) }}>
+          <span style={{ color: "#188038", fontWeight: 700 }}>Ouvert</span> <span style={{ color: "#5F6368" }}>· Ferme à 18:00 · Dépannage 7j/7</span>
+        </div>
+        <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+          {BTN.map((b) => (
+            <div key={b} style={{ flex: 1, padding: "8px 0", borderRadius: 18, border: "2px solid #DADCE0", textAlign: "center", fontFamily: F.grotesk, fontWeight: 700, fontSize: 16, color: "#1A73E8" }}>
+              {b}
+            </div>
+          ))}
+        </div>
+        {/* photos */}
+        <div style={{ display: "flex", gap: 8, marginTop: 14, ...on(3) }}>
+          <div style={{ width: 118, height: 84, borderRadius: 10, background: "#F1ECE4", overflow: "hidden", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Boiler size={50} broken={false} />
+          </div>
+          <div style={{ width: 118, height: 84, borderRadius: 10, background: "#F1ECE4", overflow: "hidden", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Radiator size={100} warm={1} />
+          </div>
+          <div style={{ width: 118, height: 84, borderRadius: 10, background: "#E8E1D6", overflow: "hidden", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Van size={110} />
+          </div>
+        </div>
+        {/* services */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 16, ...on(4) }}>
+          {["Entretien chaudière", "Dépannage", "Pompe à chaleur", "Devis gratuit"].map((s) => (
+            <div key={s} style={{ padding: "6px 14px", borderRadius: 14, background: "#F1F3F4", fontFamily: F.grotesk, fontSize: 17, color: "#3C4043" }}>
+              {s}
+            </div>
+          ))}
+        </div>
+        {/* avis + réponse du propriétaire */}
+        <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid #E8EAED", ...on(4) }}>
+          <div style={{ fontFamily: F.grotesk, fontSize: 19, color: "#202124" }}>
+            <Stars n={5} size={18} /> « Venu un dimanche soir, travail propre. »
+          </div>
+          <div style={{ marginTop: 8, marginLeft: 16, padding: "8px 12px", borderLeft: `3px solid ${C.copper}`, fontFamily: F.grotesk, fontSize: 17, color: "#5F6368" }}>
+            Réponse du propriétaire : Merci Sophie, à votre service !
+          </div>
+        </div>
+      </div>
+      <div style={{ position: "absolute", right: 16, top: 16, padding: "4px 12px", borderRadius: 10, background: "rgba(13,27,42,0.75)", fontFamily: F.mono, fontSize: 14, letterSpacing: "0.15em", color: IV, zIndex: 6 }}>EXEMPLE</div>
+    </PhoneFrame>
+  );
+};

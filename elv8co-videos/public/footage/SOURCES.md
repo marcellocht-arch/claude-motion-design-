@@ -9,3 +9,5 @@
 | liege-escaliers-bueren.jpg | Photo fournie par Marcel le 27/10/2026 (Unsplash, licence Unsplash : usage commercial autorisé) | Aucun |
 | liege-guillemins.jpg | Photo fournie par Marcel le 27/10/2026 (Unsplash, licence Unsplash : usage commercial autorisé) | Marque du camion de livraison floutée |
 | liege-panorama.jpg | Photo fournie par Marcel le 27/10/2026 (Unsplash, licence Unsplash : usage commercial autorisé) | Aucun |
+| photo-telephone-soir.jpg | Unsplash (licence Unsplash), fournie par Marcel le 27/10/2026 | Écran du téléphone flouté (logos d'applications) |
+| photo-technicien.jpg | Unsplash (licence Unsplash), fournie par Marcel le 27/10/2026 | Marque des gants floutée |

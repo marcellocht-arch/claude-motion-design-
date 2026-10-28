@@ -93,40 +93,43 @@ Sophie est une histoire inventée (« Exemple illustratif » à l'écran). En ex
 
 ---
 
-## L3 — « Les réseaux sociaux pour un commerce : par où commencer ? »
+## L3 — « Les réseaux sociaux pour un commerce : par où commencer ? » (version histoire : Julien)
 
-Fichier : `L3-reseaux-sociaux.mp3` · 333 mots, environ 2,2 min.
-Requête visée : « quel réseau social pour un commerce ».
+Fichier : `L3-reseaux-sociaux.mp3` · environ 340 mots, environ 2,2 min.
+Requête visée : « quel réseau social pour un commerce ». Réécrite le 28/10/2026 sur le format du « Parcours de Sophie » (record de vues Instagram) : un personnage inventé, un métier concret, quatre épisodes. Julien est une histoire inventée (« Exemple illustratif » à l'écran).
 
 ```
-[warmly] Facebook, Instagram, TikTok, LinkedIn, YouTube… Quand on a un commerce, on a vite l'impression qu'il faudrait être partout. Et du coup, on n'est nulle part.
-On fait simple : quel réseau choisir, quoi publier, à quel rythme, et comment savoir si ça marche.
+[warmly] Lundi matin. Julien, boulanger, vient d'ouvrir cinq comptes : Facebook, Instagram, TikTok, LinkedIn, YouTube.
+Trois semaines plus tard, il ne publie plus nulle part. Trop de travail. Et pas un seul nouveau client.
+Le problème, ce n'est pas Julien. C'est d'avoir voulu être partout.
+On reprend avec lui, en quatre questions.
 
-Quel réseau choisir pour votre commerce ? La règle : allez là où sont vos clients, pas là où c'est à la mode.
-Facebook reste très utilisé par une clientèle adulte et locale, avec ses groupes de quartier.
-Instagram et TikTok touchent aussi un public plus jeune, et adorent la vidéo verticale.
-LinkedIn, c'est pour parler aux entreprises. Et YouTube, pour les vidéos qu'on cherche : les explications, les tutos.
-Mon conseil : un réseau principal, bien tenu. Puis un deuxième quand le premier tourne.
+Première question : quel réseau ? Julien regarde qui sont ses clients. Des familles du quartier, des gens qui passent avant le travail.
+Eux, ils sont sur Facebook, dans les groupes du quartier. Et sur Instagram.
+La règle : allez là où sont vos clients, pas là où c'est à la mode.
+Julien garde un seul réseau principal, bien tenu. Le deuxième viendra quand le premier tournera.
 
-Vous ne savez pas quoi publier ? Trois familles de contenus marchent pour presque tous les commerces.
-Un : les conseils. Répondez aux questions qu'on vous pose tous les jours. Chaque réponse est une vidéo.
-Deux : les coulisses. Comment vous travaillez, qui vous êtes, ce qui se passe avant l'ouverture.
-Trois : les preuves. Une réalisation, un client content, un avant après.
-Et une règle d'or : une vidéo, une idée.
+Deuxième question : quoi publier ? Julien dit qu'il n'a pas d'idées. Pourtant, on lui pose les mêmes questions tous les jours.
+« C'est quoi la différence entre vos pains ? » Chaque réponse devient une vidéo : c'est un conseil.
+Le four qui s'allume à quatre heures du matin : ce sont les coulisses.
+La pièce montée d'un mariage, la cliente qui revient chaque samedi : ce sont les preuves.
+Conseils, coulisses, preuves. Et une règle d'or : une vidéo, une idée.
 
-Combien de fois faut-il publier ? Mieux vaut une publication par semaine tenue toute l'année que sept par semaine pendant un mois.
-Bloquez une heure par semaine dans votre agenda. Préparez plusieurs publications d'un coup. Programmez-les.
-Et recyclez : une même vidéo verticale peut tourner en Reel, en TikTok et en Short YouTube.
+Troisième question : à quel rythme ? Julien voulait publier tous les jours. Il a tenu une semaine.
+Mieux vaut une publication par semaine pendant un an que sept par semaine pendant un mois.
+Alors il bloque une heure le mardi après-midi. Il prépare plusieurs vidéos d'un coup, et il les programme.
+Et une même vidéo verticale tourne en Reel, en TikTok et en Short.
 
-Comment savoir si vos réseaux marchent ? Oubliez les likes.
-Regardez deux choses : les messages que vous recevez, et les clients qui vous disent « je vous ai vu sur Facebook ».
-C'est ça, le vrai résultat.
+Dernière question : comment savoir si ça marche ? Julien regardait ses likes. Mauvais compteur.
+Ce qui compte : les messages qu'il reçoit… et la cliente qui lui dit au comptoir : « Je vous ai vu sur Facebook. »
+Ça, c'est le vrai résultat.
 
-Résumé : un réseau principal, trois types de contenus, une publication par semaine, et on mesure les vrais contacts.
-Vous ne savez pas par quoi commencer pour votre commerce ? Écrivez-moi sur WhatsApp, on choisit ensemble. Et abonnez-vous pour la suite !
+Résumé : un réseau principal, trois types de contenus, une publication par semaine, et on compte les vrais contacts.
+Faites le test : combien de comptes avez-vous ouverts… et combien sont vraiment tenus ?
+Vous ne savez pas par où commencer ? Écrivez-moi sur WhatsApp, on choisit ensemble. Et abonnez-vous pour la suite !
 ```
 
-**Extraits L3** : paragraphe 2 « Quel réseau choisir ? », paragraphe 3 « Quoi publier ? », paragraphe 4 « À quel rythme ? », paragraphe 5 « Comment mesurer ? » (4 extraits).
+**Extraits L3** : paragraphes 2 à 5 = épisodes 1 à 4 de « Julien, boulanger » (quel réseau, quoi publier, quel rythme, comment mesurer).
 
 ---
 

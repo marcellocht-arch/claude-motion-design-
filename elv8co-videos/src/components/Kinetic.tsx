@@ -83,7 +83,7 @@ export const Words: React.FC<{
             switch (mode) {
               case "rise":
                 clip = true;
-                inner = { transform: `translateY(${(1 - s) * 110 - e * 110}%)` };
+                inner = { transform: `translateY(${(1 - s) * 110 - e * 110}%)`, opacity: e > 0.98 ? 0 : 1 };
                 break;
               case "blur":
                 inner = {
@@ -103,7 +103,7 @@ export const Words: React.FC<{
                 break;
               case "slide":
                 clip = true;
-                inner = { transform: `translateX(${(1 - s) * -105 + e * 105}%)` };
+                inner = { transform: `translateX(${(1 - s) * -105 + e * 105}%)`, opacity: e > 0.98 ? 0 : 1 };
                 break;
               case "flip":
                 inner = {

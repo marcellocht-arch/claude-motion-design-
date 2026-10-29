@@ -19,3 +19,5 @@
 | boulangerie-telephone-soir.jpg | Unsplash (licence Unsplash), fournie par Marcel le 29/10/2026 | Logo de boisson et autocollant floutés · vidéo 3 « Julien » |
 | julien-portrait.jpg | Unsplash (licence Unsplash), fournie par Marcel le 29/10/2026 | Logo du four effacé · « Julien » (personnage inventé) |
 | piece-montee.jpg | Unsplash (licence Unsplash), fournie par Marcel le 29/10/2026 | Logo de club sur le marié et étiquette de bouteille floutés · « les preuves » |
+| four-nuit.jpg | Unsplash (licence Unsplash), fournie par Marcel le 29/10/2026 | Aucun · « le four à quatre heures du matin » (coulisses) |
+| fournee-chariot.jpg | Unsplash (licence Unsplash), fournie par Marcel le 29/10/2026 | Aucun · coulisses, fournée du matin |

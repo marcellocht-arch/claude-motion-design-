@@ -17,3 +17,4 @@
 | photo-salon-chaleureux.jpg | Unsplash (licence Unsplash), fournie par Marcel le 27/10/2026 | Aucun |
 | boulangerie-vitrine.jpg | Unsplash (licence Unsplash), fournie par Marcel le 29/10/2026 | Ardoise en turc floutée (pas de texte étranger à l'écran) · vidéo 3 « Julien » |
 | boulangerie-telephone-soir.jpg | Unsplash (licence Unsplash), fournie par Marcel le 29/10/2026 | Logo de boisson et autocollant floutés · vidéo 3 « Julien » |
+| julien-portrait.jpg | Unsplash (licence Unsplash), fournie par Marcel le 29/10/2026 | Logo du four effacé · « Julien » (personnage inventé) |
